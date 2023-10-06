@@ -9,9 +9,9 @@ function Quiz(props) {
     fetchQuiz();
   }, [fetchQuiz]);
 
-  return (
+   return (
     <div id="wrapper">
-      {quizData ? (
+      
         <>
           <h2>{quizData.question}</h2>
 
@@ -26,15 +26,15 @@ function Quiz(props) {
 
           <button id="submitAnswerBtn">Submit answer</button>
         </>
-      ) : (
-        'Loading next quiz...'
-      )}
+       (
+      
+      )
     </div>
   );
 }
 
 const mapStateToProps = (state) => ({
-  quizData: state.quizData, // Replace with the correct property from your Redux store
+  quizData: state.quizData, 
 });
 
 const mapDispatchToProps = {

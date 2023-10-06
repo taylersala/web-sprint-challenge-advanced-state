@@ -1,26 +1,97 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import * as actionCreators from '../state/action-creators'
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { postQuiz } from '../state/action-creators';
+import axios from 'axios';
 
 export function Form(props) {
+    const [formData, setFormData] = useState({
+      newQuestion: '',
+      newTrueAnswer: '',
+      newFalseAnswer: '',
+    });
 
   const onChange = evt => {
-
+    const { id, value } = evt.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
   }
 
-  const onSubmit = evt => {
-
-  }
+  const onSubmit = async (evt) => {
+    evt.preventDefault();
+    const { newQuestion, newTrueAnswer, newFalseAnswer } = formData;
+  
+    if (newQuestion && newTrueAnswer && newFalseAnswer) {
+      try {
+        const response = await axios.post('http://localhost:9000/api/quiz/new', {
+          question_text: newQuestion,
+          true_answer_text: newTrueAnswer,
+          false_answer_text: newFalseAnswer,
+        });
+  
+        if (response.status === 201) {
+          //comes back as a 201 not 200
+          console.log('Quiz created successfully', response.data );
+          
+          setFormData({
+            newQuestion: '',
+            newTrueAnswer: '',
+            newFalseAnswer: '',
+          });
+        } else {
+          console.error('Failed to create quiz:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Network error:', error);
+      }
+    } else {
+      alert('Please fill in all of the fields.');
+    }
+  };
+  
 
   return (
     <form id="form" onSubmit={onSubmit}>
       <h2>Create New Quiz</h2>
-      <input maxLength={50} onChange={onChange} id="newQuestion" placeholder="Enter question" />
-      <input maxLength={50} onChange={onChange} id="newTrueAnswer" placeholder="Enter true answer" />
-      <input maxLength={50} onChange={onChange} id="newFalseAnswer" placeholder="Enter false answer" />
-      <button id="submitNewQuizBtn">Submit new quiz</button>
+      <input
+        maxLength={50}
+        minLength={1}
+        onChange={onChange}
+        id="newQuestion"
+        placeholder="Enter question"
+        value={formData.newQuestion}
+      />
+      <input
+        maxLength={50}
+        minLength={1}
+        onChange={onChange}
+        id="newTrueAnswer"
+        placeholder="Enter true answer"
+        value={formData.newTrueAnswer}
+      />
+      <input
+        maxLength={50}
+        minLength={1}
+        onChange={onChange}
+        id="newFalseAnswer"
+        placeholder="Enter false answer"
+        value={formData.newFalseAnswer}
+      />
+      <button id="submitNewQuizBtn" type="submit">
+        Submit new quiz
+      </button>
     </form>
-  )
+  );
 }
 
-export default connect(st => st, actionCreators)(Form)
+const mapStateToProps = (state) => ({
+  quizData: state.quizData
+});
+
+const mapDispatchToProps = {
+  postQuiz
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Form);
+
