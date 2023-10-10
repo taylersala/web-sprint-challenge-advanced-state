@@ -47,7 +47,7 @@ export function fetchQuiz() {
     axios
       .get('http://localhost:9000/api/quiz/next')
       .then((response) => {
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
           const quizData = response.data;
           console.log(quizData)
           dispatch({ type: actionTypes.SET_QUIZ_INTO_STATE, payload: quizData });

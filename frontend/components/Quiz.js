@@ -10,8 +10,9 @@ function Quiz(props) {
   }, [fetchQuiz]);
 
    return (
+  
     <div id="wrapper">
-      
+      {quizData ? (
         <>
           <h2>{quizData.question}</h2>
 
@@ -26,9 +27,9 @@ function Quiz(props) {
 
           <button id="submitAnswerBtn">Submit answer</button>
         </>
-       (
-      
-      )
+      ) : (
+        'Loading next quiz...'
+      )}
     </div>
   );
 }
