@@ -35,7 +35,8 @@ function Quiz(props) {
 }
 
 const mapStateToProps = (state) => ({
-  quizData: state.quizData, 
+  quizData: state.payload, 
+  
 });
 
 const mapDispatchToProps = {
