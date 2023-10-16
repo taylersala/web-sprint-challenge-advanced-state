@@ -28,7 +28,7 @@ const initialQuizState = null
 function quiz(state = initialQuizState, action) {
   switch(action.type){
     case actionTypes.SET_QUIZ_INTO_STATE:
-      return action.payload
+      return {...state, setQuizIntoState: action.payload}
     default:
       return state;
   }
@@ -38,7 +38,7 @@ const initialSelectedAnswerState = null
 function selectedAnswer(state = initialSelectedAnswerState, action) {
   switch(action.type){
     case actionTypes.SET_SELECTED_ANSWER:
-      return action.payload
+      return {...state, setSelectedAnswer: action.payload}
     default: 
       return(state);
   }
@@ -48,7 +48,7 @@ const initialMessageState = ''
 function infoMessage(state = initialMessageState, action) {
   switch (action.type) {
     case actionTypes.SET_INFO_MESSAGE:
-      return action.payload; 
+      return {...state, setInfoMessage: action.payload }
     default:
       return state;
   }
@@ -59,10 +59,19 @@ const initialFormState = {
   newTrueAnswer: '',
   newFalseAnswer: '',
 }
+
+//Come back here to double check 
+
+// const updatedFormValues = {
+//   newQuestion: 'Updated question',
+//   newTrueAnswer: 'Updated true answer',
+//   newFalseAnswer: 'Updated false answer',
+// };
+
 function form(state = initialFormState, action) {
   switch(action.type){
     case actionTypes.RESET_FORM:
-      return action.payload;
+      return {...state, resetForm: action.payload}
     case actionTypes.INPUT_CHANGE:
       return {
         ...state,
