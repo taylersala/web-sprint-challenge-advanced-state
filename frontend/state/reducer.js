@@ -24,12 +24,21 @@ function wheel(state = initialWheelState, action) {
   }
 }
 
-const initialQuizState = null
+const initialQuizState = {
+  isReady: false,
+  data: {},
+  message: "the quiz is loading..."
+}
+
+
+
 function quiz(state = initialQuizState, action) {
   switch(action.type){
+    case actionTypes.SET_INFO_MESSAGE:
+      return {...state, message: action.payload}
     case actionTypes.SET_QUIZ_INTO_STATE:
-      return {...state, setQuizIntoState: action.payload}
-    default:
+        return {...state, message: "", isReady: true, data: action.payload}
+    default: 
       return state;
   }
 }

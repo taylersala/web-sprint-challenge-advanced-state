@@ -35,14 +35,26 @@ export function setQuiz(quizData) {
   });
  }
 
-export function inputChange() { }
+ // come back to fix
 
-export function resetForm() { }
+export function inputChange() { 
+  return ({ 
+    type: actionTypes.INPUT_CHANGE, payload: null
+  });
+}
+
+// come back to fix 
+
+export function resetForm(initialFormState) { 
+  return ({
+    type: actionTypes.RESET_FORM, payload: initialFormState
+  });
+}
 
 // ❗ Async action creators
 export function fetchQuiz() {
   return function (dispatch) {
-    dispatch({ type: actionTypes.SET_QUIZ_INTO_STATE, payload: null });
+    dispatch({ type: actionTypes.SET_INFO_MESSAGE, payload: {} });
 
     axios
       .get('http://localhost:9000/api/quiz/next')

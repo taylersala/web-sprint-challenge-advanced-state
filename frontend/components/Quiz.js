@@ -3,18 +3,23 @@ import { connect } from 'react-redux';
 import { fetchQuiz } from '../state/action-creators';
 
 function Quiz(props) {
-  const { quizData, fetchQuiz } = props;
+  const { quizData, fetchQuiz, isReady, message } = props;
+
+  console.log('test', quizData)
 
   useEffect(() => {
     fetchQuiz();
   }, [fetchQuiz]);
 
+ fetchQuiz()
+ console.log('testing', quizData)
    return (
   
     <div id="wrapper">
-      {quizData ? (
+      {isReady ? (
         <>
           <h2>{quizData.question}</h2>
+    
 
           <div id="quizAnswers">
             {quizData.answers.map((answer, index) => (
@@ -28,14 +33,17 @@ function Quiz(props) {
           <button id="submitAnswerBtn">Submit answer</button>
         </>
       ) : (
-        'Loading next quiz...'
+        message
       )}
     </div>
   );
 }
 
+
 const mapStateToProps = (state) => ({
-  quizData: state.payload, 
+  quizData: state.quizData,
+  isReady: state.isReady,
+  message: state.message
   
 });
 
