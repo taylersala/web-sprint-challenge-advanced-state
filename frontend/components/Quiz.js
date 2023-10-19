@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { fetchQuiz } from '../state/action-creators';
 
 function Quiz(props) {
-  const { quizData, fetchQuiz, isReady, message } = props;
+  const { data, fetchQuiz, isReady, message } = props;
 
 
 
@@ -12,17 +12,17 @@ function Quiz(props) {
   }, [fetchQuiz]);
 
  fetchQuiz()
- console.log('testing', quizData)
+ console.log('testing', data)
    return (
   
     <div id="wrapper">
       {isReady ? (
         <>
-          <h2>{quizData.question}</h2>
+          <h2>{data.question}</h2>
     
 
           <div id="quizAnswers">
-            {quizData.answers.map((answer, index) => (
+            {data.answers.map((answer, index) => (
               <div key={index} className="answer">
                 {answer.text}
                 <button>Select</button>
@@ -41,7 +41,7 @@ function Quiz(props) {
 
 
 const mapStateToProps = (state) => ({
-  quizData: state.data,
+  data: state.data,
   isReady: state.isReady,
   message: state.message
   

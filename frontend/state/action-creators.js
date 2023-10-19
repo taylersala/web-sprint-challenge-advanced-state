@@ -60,9 +60,9 @@ export function fetchQuiz() {
       .get('http://localhost:9000/api/quiz/next')
       .then((response) => {
         if (response.status === 200 || response.status === 201) {
-          const quizData = response.data;
-          console.log('action creator get request successful, log of quizData', quizData)
-          dispatch({ type: actionTypes.SET_QUIZ_INTO_STATE, payload: quizData });
+          const data = response.data;
+          console.log('action creator get request successful, log of data', data)
+          dispatch({ type: actionTypes.SET_QUIZ_INTO_STATE, payload: data });
         } else {
           dispatch({ type: actionTypes.SET_INFO_MESSAGE, payload: 'Failed to retrieve quiz data' });
         }
