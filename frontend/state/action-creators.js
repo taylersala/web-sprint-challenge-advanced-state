@@ -54,14 +54,14 @@ export function resetForm(initialFormState) {
 // ❗ Async action creators
 export function fetchQuiz() {
   return function (dispatch) {
-    dispatch({ type: actionTypes.SET_INFO_MESSAGE, payload: {} });
+    dispatch({ type: actionTypes.SET_INFO_MESSAGE, payload: '' });
 
     axios
       .get('http://localhost:9000/api/quiz/next')
       .then((response) => {
         if (response.status === 200 || response.status === 201) {
           const quizData = response.data;
-          console.log(quizData)
+          console.log('action creator get request successful, log of quizData', quizData)
           dispatch({ type: actionTypes.SET_QUIZ_INTO_STATE, payload: quizData });
         } else {
           dispatch({ type: actionTypes.SET_INFO_MESSAGE, payload: 'Failed to retrieve quiz data' });

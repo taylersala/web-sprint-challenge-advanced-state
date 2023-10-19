@@ -5,7 +5,7 @@ import { fetchQuiz } from '../state/action-creators';
 function Quiz(props) {
   const { quizData, fetchQuiz, isReady, message } = props;
 
-  console.log('test', quizData)
+
 
   useEffect(() => {
     fetchQuiz();
@@ -41,7 +41,7 @@ function Quiz(props) {
 
 
 const mapStateToProps = (state) => ({
-  quizData: state.quizData,
+  quizData: state.data,
   isReady: state.isReady,
   message: state.message
   
