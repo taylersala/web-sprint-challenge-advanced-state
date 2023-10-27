@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { postQuiz } from '../state/action-creators';
 import axios from 'axios';
 
-export function Form(props) {
+export function Form() {
     const [formData, setFormData] = useState({
       newQuestion: '',
       newTrueAnswer: '',

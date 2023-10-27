@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchQuiz, selectAnswer } from '../state/action-creators';
 
@@ -11,15 +11,18 @@ function Quiz(props) {
   }, [fetchQuiz]);
 
   const handleAnswerSelect = (answerId) => {
-    selectAnswer(answerId);
+    if (selectedAnswer === answerId) {
+      // no unselecting working
+      return;
+    }
+    setSelectedAnswer(answerId);
   };
 
   const handleQuizSubmit = () => {
     if (selectedAnswer !== null) {
       postAnswer(quiz.data.quiz_id, selectedAnswer);
-      setSelectedAnswer(null);
+    }
   };
-}
 
   return (
     <div id="wrapper">
@@ -33,7 +36,7 @@ function Quiz(props) {
                 {answer.text}
                 <button
                   onClick={() => handleAnswerSelect(answer.answer_id)}
-                  disabled={selectedAnswer !== null && selectedAnswer !== answer.answer_id}
+                  className={selectedAnswer === answer.answer_id ? 'selected' : ''}
                 >
                   {selectedAnswer === answer.answer_id ? 'SELECTED' : 'Select'}
                 </button>
