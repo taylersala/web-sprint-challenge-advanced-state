@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchQuiz, selectAnswer, postAnswer } from '../state/action-creators';
+import Message from './Message';
 
 function Quiz(props) {
   const { quiz, fetchQuiz, selectAnswer, postAnswer } = props;
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [ message, setMessage ] = useState('');
 
   useEffect(() => {
     fetchQuiz();
@@ -20,12 +22,23 @@ function Quiz(props) {
   const handleQuizSubmit = () => {
     if (selectedAnswer !== null) {
       postAnswer(quiz.data.quiz_id, selectedAnswer)
-        .then(() => {
+        .then((response) => {
+          if (response && response.status === true) {
+            setMessage('Nice job! That was the correct answer');
+          } else {
+            setMessage('What a shame! That was the incorrect answer');
+          }
           fetchQuiz();
+          setSelectedAnswer(null);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          setMessage('An error occurred while submitting the answer');
         });
-      setSelectedAnswer(null);
     }
   };
+  
+  
 
   return (
     <div id="wrapper">
@@ -53,6 +66,8 @@ function Quiz(props) {
           >
             Submit answer
           </button>
+
+          <Message message={message} />
         </>
       ) : (
         quiz.message
