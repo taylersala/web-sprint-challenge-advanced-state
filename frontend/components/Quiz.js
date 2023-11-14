@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { connect } from 'react-redux';
 import { fetchQuiz, selectAnswer, postAnswer } from '../state/action-creators';
 import Message from './Message';
@@ -9,8 +10,12 @@ function Quiz(props) {
   const [ message, setMessage ] = useState('');
 
   useEffect(() => {
-    fetchQuiz();
-  }, [fetchQuiz]);
+    props.fetchQuiz();
+    axios.get("http://localhost:9000/api/quiz/next")
+    .then(res => {
+      console.log(res)
+    })
+  }, []);
 
   const handleAnswerSelect = (answerId) => {
     if (selectedAnswer === answerId) {
