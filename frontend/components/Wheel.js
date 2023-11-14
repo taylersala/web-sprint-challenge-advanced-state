@@ -18,6 +18,8 @@ function Wheel(props) {
     console.log('counter', wheelValue)
   };
 
+  // check out .map 
+
   return (
     <div id="wrapper">
       <div id="wheel">

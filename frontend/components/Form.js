@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { postQuiz } from '../state/action-creators';
 import axios from 'axios';
-import Message from './Message'; // Adjust the path to your Message component
+import Message from './Message';  
 
 export function Form(props) {
   const [formData, setFormData] = useState({
@@ -16,16 +16,20 @@ export function Form(props) {
 
   const onChange = (evt) => {
     const { id, value } = evt.target;
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [id]: value,
-    });
+    }));
     setDisabled(
-      formData.newQuestion.length < 1 &&
-      formData.newTrueAnswer.length < 1 &&
-      formData.newFalseAnswer.length < 1
+      formData.newQuestion.length < 2 ||
+      formData.newTrueAnswer.length < 2 ||
+      formData.newFalseAnswer.length < 2
     );
   };
+  
+  
+
+  // when changing the setDisabled function to || over && to check if they have less than two a fifth test fails
 
   const onSubmit = async (evt) => {
     evt.preventDefault();

@@ -19,10 +19,14 @@ function Quiz(props) {
     setSelectedAnswer(answerId);
   };
 
+// for some reasion response is undefined not sure why 
+
+  
   const handleQuizSubmit = () => {
     if (selectedAnswer !== null) {
       postAnswer(quiz.data.quiz_id, selectedAnswer)
         .then((response) => {
+          console.log(response)
           if (response && response.status === true) {
             setMessage('Nice job! That was the correct answer');
           } else {
@@ -33,7 +37,7 @@ function Quiz(props) {
         })
         .catch((error) => {
           console.error('Error:', error);
-          setMessage('An error occurred while submitting the answer');
+          setMessage('An error occurred while submitting your answer');
         });
     }
   };

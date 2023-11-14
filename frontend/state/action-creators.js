@@ -73,6 +73,14 @@ export function fetchQuiz() {
     // - Dispatch an action to send the obtained quiz to its state
   }
 }
+
+export const updateFormData = (formData) => ({
+  type: actionTypes.UPDATE_FORM_DATA,
+  payload: formData,
+});
+
+
+
 export function postAnswer(quizId, answerId) {
   return async function (dispatch) {
     try {
