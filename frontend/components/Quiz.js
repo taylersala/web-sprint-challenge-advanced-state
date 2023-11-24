@@ -1,99 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { connect } from 'react-redux';
-import { fetchQuiz, selectAnswer, postAnswer } from '../state/action-creators';
-import Message from './Message';
-
+import React from 'react'
+import { connect } from 'react-redux'
+import { fetchQuiz, selectAnswer, postAnswer } from '../state/action-creators'
 function Quiz(props) {
-  const { quiz, fetchQuiz, selectAnswer, postAnswer } = props;
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [ message, setMessage ] = useState('');
-
-  useEffect(() => {
+  if (!props.isFetching) {
     props.fetchQuiz();
-    axios.get("http://localhost:9000/api/quiz/next")
-    .then(res => {
-      console.log(res)
-    })
-  }, []);
-
-  const handleAnswerSelect = (answerId) => {
-    if (selectedAnswer === answerId) {
-      return;
-    }
-    setSelectedAnswer(answerId);
-  };
-
-// for some reasion response is undefined not sure why 
-
+  }
   
-  const handleQuizSubmit = () => {
-    if (selectedAnswer !== null) {
-      postAnswer(quiz.data.quiz_id, selectedAnswer)
-        .then((response) => {
-          console.log(response)
-          if (response && response.status === true) {
-            setMessage('Nice job! That was the correct answer');
-          } else {
-            setMessage('What a shame! That was the incorrect answer');
-          }
-          fetchQuiz();
-          setSelectedAnswer(null);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-          setMessage('An error occurred while submitting your answer');
-        });
-    }
-  };
-  
-  
-
   return (
     <div id="wrapper">
-      {quiz.ready ? (
-        <>
-          <h2>{quiz.data.question}</h2>
 
-          <div id="quizAnswers">
-            {quiz.data.answers.map((answer, index) => (
-              <div key={index} className={`answer ${selectedAnswer === answer.answer_id ? 'selected' : ''}`}>
-                {answer.text}
-                <button
-                  onClick={() => handleAnswerSelect(answer.answer_id)}
-                >
-                  {selectedAnswer === answer.answer_id ? 'SELECTED' : 'Select'}
-                </button>
-              </div>
-            ))}
-          </div>
+      {
+        // quiz already in state? Let's use that, otherwise render "Loading next quiz..."
+        props.isFetching ? (
+          <>
+            <h2>{props.quiz.question}</h2>
+            <div id="quizAnswers">
+              {props.quiz.answers.map((answer, ind) => {
+                return <div key={answer.text} className={props.quiz.answers[ind].answerHighlight ? "answer selected" : "answer"}>{answer.text}
+                  <button onClick={() => props.selectAnswer(answer.answer_id)}>{props.quiz.answers[ind].selectValue}</button>
+                </div>
+              })}
+            </div>
 
-          <button
-            id="submitAnswerBtn"
-            onClick={handleQuizSubmit}
-            disabled={selectedAnswer === null}
-          >
-            Submit answer
-          </button>
-
-          <Message message={message} />
-        </>
-      ) : (
-        quiz.message
-      )}
+            <button id="submitAnswerBtn" disabled={props.buttonState} onClick={() => props.postAnswer(props.quiz)}>Submit answer</button>
+          </>
+        ) : 'Loading next quiz...'
+      }
     </div>
-  );
+  )
 }
 
-const mapStateToProps = (state) => ({
-  quiz: state.quiz,
-  selectedAnswer: state.selectedAnswer,
-});
+const mapStateToProps = state => {
+  return {
+    quiz: state.quiz.quiz,
+    isFetching: state.quiz.isFetching,
+    error: state.quiz.error,
+    buttonState: state.quiz.buttonState
+  }
+}
 
-const mapDispatchToProps = {
-  fetchQuiz,
-  selectAnswer,
-  postAnswer,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Quiz);
+export default connect(mapStateToProps, { fetchQuiz, selectAnswer, postAnswer })(Quiz);

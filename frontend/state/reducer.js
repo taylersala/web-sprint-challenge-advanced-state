@@ -24,73 +24,106 @@ function wheel(state = initialWheelState, action) {
 }
 
 const initialQuizState = {
-  ready: false,
-  message: "Starting up.",
-  data: {},
+  quiz: "",
+  isFetching: false,
+  error: "",
+  buttonState: true,
 }
+
 function quiz(state = initialQuizState, action) {
   switch (action.type) {
-    case actionTypes.SET_INFO_MESSAGE:
-      return { ...state, message: action.payload }
+    case actionTypes.SET_IS_FETCHING:
+      return {
+        ...state,
+        isFetching: action.payload
+      }
     case actionTypes.SET_QUIZ_INTO_STATE:
-      return { ready: true, message: "", data: action.payload }
-    default:
-      return state
-  }
-}
-
-const initialSelectedAnswerState = null
-function selectedAnswer(state = initialSelectedAnswerState, action) {
-  switch (action.type) {
+      return {
+        ...state,
+        quiz: {
+          ...action.payload,
+          answers: action.payload.answers.map((element) => {
+            return { ...element, selectValue: "Select", answerHighlight: false }
+          })
+        },
+        isFetching: true,
+        error: "",
+        buttonState: true
+      }
+    case actionTypes.SET_ERROR:
+      return {
+        ...state,
+        isFetching: true,
+        error: action.payload
+      }
     case actionTypes.SET_SELECTED_ANSWER:
-      return { ...state, setSelectedAnswer: action.payload }
+      return {
+        ...state,
+        quiz: {
+          ...state.quiz, answers: state.quiz.answers.map(element => {
+            if (action.payload === element.answer_id) {
+              return { ...element, selectValue: "SELECTED", answerHighlight: true }
+            } else {
+              return { ...element, selectValue: "Select", answerHighlight: false }
+            }
+          })
+        },
+        selectValue: state.quiz.answers.selectValue,
+        isFetching: true,
+        error: "",
+        buttonState: false,
+      }
+    case actionTypes.RESET_SELECTED_STATE:
+      return {
+        ...state,
+        quiz: {
+          ...state.quiz,
+          answers: state.quiz.answers.map(element => {
+            return { ...element, selectValue: "Select", answerHighlight: false }
+          })
+        },
+        buttonState: true
+      }
+    
     default:
       return state
   }
 }
 
-const initialMessageState = ""
+const initialMessageState = {
+  infoMessage: ""
+}
 function infoMessage(state = initialMessageState, action) {
-  switch (action.type) {
+  switch(action.type){
     case actionTypes.SET_INFO_MESSAGE:
-      return { ...state, setInfoMessage: action.payload }
+      return {
+        infoMessage: action.payload
+      }
+    case actionTypes.CLEAR_INFO_MESSAGE:
+      return (state = initialMessageState)
     default:
       return state
   }
 }
 
 const initialFormState = {
-  newQuestion: "",
-  newTrueAnswer: "",
-  newFalseAnswer: "",
+  newQuestion: '',
+  newTrueAnswer: '',
+  newFalseAnswer: '',
 }
-
-//Come back here to double check
-
-// const updatedFormValues = {
-//   newQuestion: 'Updated question',
-//   newTrueAnswer: 'Updated true answer',
-//   newFalseAnswer: 'Updated false answer',
-// };
-
 function form(state = initialFormState, action) {
+  const evt = action.payload;
   switch (action.type) {
-    case actionTypes.RESET_FORM:
-      return { ...state, resetForm: action.payload }
     case actionTypes.INPUT_CHANGE:
       return {
         ...state,
-        [action.payload.fieldName]: action.payload.fieldValue,
+        [evt.target.id]: evt.target.value
       }
+    case actionTypes.RESET_FORM:
+      return (state = initialFormState)
     default:
       return state
   }
 }
 
-export default combineReducers({
-  wheel,
-  quiz,
-  selectedAnswer,
-  infoMessage,
-  form,
-})
+export default combineReducers({ wheel, quiz, form, infoMessage })
